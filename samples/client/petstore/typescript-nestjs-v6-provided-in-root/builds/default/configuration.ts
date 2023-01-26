@@ -1,3 +1,5 @@
+import {HttpModuleOptions} from "@nestjs/axios";
+
 export interface ConfigurationParameters {
     apiKeys?: {[ key: string ]: string};
     username?: string;
@@ -5,6 +7,7 @@ export interface ConfigurationParameters {
     accessToken?: string | (() => string);
     basePath?: string;
     withCredentials?: boolean;
+    httpModuleOptionsFactory?: ()=> Promise<HttpModuleOptions>;
 }
 
 export class Configuration {
@@ -13,7 +16,8 @@ export class Configuration {
     password?: string;
     accessToken?: string | (() => string);
     basePath?: string;
-    withCredentials?: boolean;
+    withCredentials?: boolean; 
+    httpModuleOptionsFactory?: () => Promise<HttpModuleOptions>;
 
     constructor(configurationParameters: ConfigurationParameters = {}) {
         this.apiKeys = configurationParameters.apiKeys;
@@ -22,6 +26,7 @@ export class Configuration {
         this.accessToken = configurationParameters.accessToken;
         this.basePath = configurationParameters.basePath;
         this.withCredentials = configurationParameters.withCredentials;
+        this.httpModuleOptionsFactory =  configurationParameters.httpModuleOptionsFactory;
     }
 
     /**
