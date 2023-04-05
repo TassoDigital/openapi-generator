@@ -17,6 +17,7 @@ import { Configuration } from '../configuration';
 {{#withInterfaces}}
 import { {{classname}}Interface } from './{{classFilename}}Interface';
 {{/withInterfaces}}
+import { COLLECTION_FORMATS } from '../variables';
 
 {{#operations}}
 {{#operation}}
@@ -120,6 +121,7 @@ export class {{classname}} {
         {{^isArray}}
         if (params.{{paramName}} !== undefined && params.{{paramName}} !== null) {
             headers['{{baseName}}'] = String(params.{{paramName}});
+        }
         {{/isArray}}
 {{/headerParams}}
 
