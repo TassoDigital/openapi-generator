@@ -11,18 +11,43 @@
  */
 /* tslint:disable:no-unused-variable member-ordering */
 
-import { HttpService, Inject, Injectable, Optional } from '@nestjs/common';
-import { AxiosResponse } from 'axios';
+import { Inject, Injectable, Optional } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
+import { AxiosResponse, AxiosRequestHeaders } from 'axios';
 import { Observable } from 'rxjs';
 import { User } from '../model/user';
 import { Configuration } from '../configuration';
 
-
+type createUserParams = {
+        user: User, 
+}
+type createUsersWithArrayInputParams = {
+        user: Array<User>, 
+}
+type createUsersWithListInputParams = {
+        user: Array<User>, 
+}
+type deleteUserParams = {
+        username: string, 
+}
+type getUserByNameParams = {
+        username: string, 
+}
+type loginUserParams = {
+        username: string, 
+        password: string, 
+}
+type logoutUserParams = {
+}
+type updateUserParams = {
+        username: string, 
+        user: User, 
+}
 @Injectable()
 export class UserService {
 
     protected basePath = 'http://petstore.swagger.io/v2';
-    public defaultHeaders: Record<string,string> = {};
+    public defaultHeaders: Record<string, string> = {};
     public configuration = new Configuration();
 
     constructor(protected httpClient: HttpService, @Optional() configuration: Configuration) {
@@ -42,15 +67,15 @@ export class UserService {
     /**
      * Create user
      * This can only be done by the logged in user.
-     * @param user Created user object
+     * @param createUserParams
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createUser(user: User, ): Observable<AxiosResponse<any>>;
-    public createUser(user: User, ): Observable<any> {
+    public createUser(params: createUserParams): Observable<AxiosResponse<any>>;
+    public createUser(params: createUserParams): Observable<any> {
 
-        if (user === null || user === undefined) {
-            throw new Error('Required parameter user was null or undefined when calling createUser.');
+        if ( params.user === null ||  params.user === undefined) {
+            throw new Error('Required parameter  params.user was null or undefined when calling createUser.');
         }
 
         let headers = this.defaultHeaders;
@@ -77,7 +102,7 @@ export class UserService {
             headers['Content-Type'] = httpContentTypeSelected;
         }
         return this.httpClient.post<any>(`${this.basePath}/user`,
-            user,
+            params.user,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers
@@ -87,15 +112,15 @@ export class UserService {
     /**
      * Creates list of users with given input array
      * 
-     * @param user List of user object
+     * @param createUsersWithArrayInputParams
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createUsersWithArrayInput(user: Array<User>, ): Observable<AxiosResponse<any>>;
-    public createUsersWithArrayInput(user: Array<User>, ): Observable<any> {
+    public createUsersWithArrayInput(params: createUsersWithArrayInputParams): Observable<AxiosResponse<any>>;
+    public createUsersWithArrayInput(params: createUsersWithArrayInputParams): Observable<any> {
 
-        if (user === null || user === undefined) {
-            throw new Error('Required parameter user was null or undefined when calling createUsersWithArrayInput.');
+        if ( params.user === null ||  params.user === undefined) {
+            throw new Error('Required parameter  params.user was null or undefined when calling createUsersWithArrayInput.');
         }
 
         let headers = this.defaultHeaders;
@@ -122,7 +147,7 @@ export class UserService {
             headers['Content-Type'] = httpContentTypeSelected;
         }
         return this.httpClient.post<any>(`${this.basePath}/user/createWithArray`,
-            user,
+            params.user,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers
@@ -132,15 +157,15 @@ export class UserService {
     /**
      * Creates list of users with given input array
      * 
-     * @param user List of user object
+     * @param createUsersWithListInputParams
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createUsersWithListInput(user: Array<User>, ): Observable<AxiosResponse<any>>;
-    public createUsersWithListInput(user: Array<User>, ): Observable<any> {
+    public createUsersWithListInput(params: createUsersWithListInputParams): Observable<AxiosResponse<any>>;
+    public createUsersWithListInput(params: createUsersWithListInputParams): Observable<any> {
 
-        if (user === null || user === undefined) {
-            throw new Error('Required parameter user was null or undefined when calling createUsersWithListInput.');
+        if ( params.user === null ||  params.user === undefined) {
+            throw new Error('Required parameter  params.user was null or undefined when calling createUsersWithListInput.');
         }
 
         let headers = this.defaultHeaders;
@@ -167,7 +192,7 @@ export class UserService {
             headers['Content-Type'] = httpContentTypeSelected;
         }
         return this.httpClient.post<any>(`${this.basePath}/user/createWithList`,
-            user,
+            params.user,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers
@@ -177,15 +202,15 @@ export class UserService {
     /**
      * Delete user
      * This can only be done by the logged in user.
-     * @param username The name that needs to be deleted
+     * @param deleteUserParams
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteUser(username: string, ): Observable<AxiosResponse<any>>;
-    public deleteUser(username: string, ): Observable<any> {
+    public deleteUser(params: deleteUserParams): Observable<AxiosResponse<any>>;
+    public deleteUser(params: deleteUserParams): Observable<any> {
 
-        if (username === null || username === undefined) {
-            throw new Error('Required parameter username was null or undefined when calling deleteUser.');
+        if ( params.username === null ||  params.username === undefined) {
+            throw new Error('Required parameter  params.username was null or undefined when calling deleteUser.');
         }
 
         let headers = this.defaultHeaders;
@@ -206,7 +231,7 @@ export class UserService {
         // to determine the Content-Type header
         const consumes: string[] = [
         ];
-        return this.httpClient.delete<any>(`${this.basePath}/user/${encodeURIComponent(String(username))}`,
+        return this.httpClient.delete<any>(`${this.basePath}/user/${encodeURIComponent(String(params.username))}`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers
@@ -216,15 +241,15 @@ export class UserService {
     /**
      * Get user by user name
      * 
-     * @param username The name that needs to be fetched. Use user1 for testing.
+     * @param getUserByNameParams
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getUserByName(username: string, ): Observable<AxiosResponse<User>>;
-    public getUserByName(username: string, ): Observable<any> {
+    public getUserByName(params: getUserByNameParams): Observable<AxiosResponse<User>>;
+    public getUserByName(params: getUserByNameParams): Observable<any> {
 
-        if (username === null || username === undefined) {
-            throw new Error('Required parameter username was null or undefined when calling getUserByName.');
+        if ( params.username === null ||  params.username === undefined) {
+            throw new Error('Required parameter  params.username was null or undefined when calling getUserByName.');
         }
 
         let headers = this.defaultHeaders;
@@ -242,7 +267,7 @@ export class UserService {
         // to determine the Content-Type header
         const consumes: string[] = [
         ];
-        return this.httpClient.get<User>(`${this.basePath}/user/${encodeURIComponent(String(username))}`,
+        return this.httpClient.get<User>(`${this.basePath}/user/${encodeURIComponent(String(params.username))}`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers
@@ -252,28 +277,27 @@ export class UserService {
     /**
      * Logs user into the system
      * 
-     * @param username The user name for login
-     * @param password The password for login in clear text
+     * @param loginUserParams
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public loginUser(username: string, password: string, ): Observable<AxiosResponse<string>>;
-    public loginUser(username: string, password: string, ): Observable<any> {
+    public loginUser(params: loginUserParams): Observable<AxiosResponse<string>>;
+    public loginUser(params: loginUserParams): Observable<any> {
 
-        if (username === null || username === undefined) {
-            throw new Error('Required parameter username was null or undefined when calling loginUser.');
+        if ( params.username === null ||  params.username === undefined) {
+            throw new Error('Required parameter  params.username was null or undefined when calling loginUser.');
         }
 
-        if (password === null || password === undefined) {
-            throw new Error('Required parameter password was null or undefined when calling loginUser.');
+        if ( params.password === null ||  params.password === undefined) {
+            throw new Error('Required parameter  params.password was null or undefined when calling loginUser.');
         }
 
         let queryParameters = {};
-        if (username !== undefined && username !== null) {
-            queryParameters['username'] = <any>username;
+        if (params.username !== undefined && params.username !== null) {
+            queryParameters['username'] = <any>params.username;
         }
-        if (password !== undefined && password !== null) {
-            queryParameters['password'] = <any>password;
+        if (params.password !== undefined && params.password !== null) {
+            queryParameters['password'] = <any>params.password;
         }
 
         let headers = this.defaultHeaders;
@@ -302,11 +326,12 @@ export class UserService {
     /**
      * Logs out current logged in user session
      * 
+     * @param logoutUserParams
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public logoutUser(): Observable<AxiosResponse<any>>;
-    public logoutUser(): Observable<any> {
+    public logoutUser(params: logoutUserParams): Observable<AxiosResponse<any>>;
+    public logoutUser(params: logoutUserParams): Observable<any> {
 
         let headers = this.defaultHeaders;
 
@@ -336,20 +361,19 @@ export class UserService {
     /**
      * Updated user
      * This can only be done by the logged in user.
-     * @param username name that need to be deleted
-     * @param user Updated user object
+     * @param updateUserParams
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateUser(username: string, user: User, ): Observable<AxiosResponse<any>>;
-    public updateUser(username: string, user: User, ): Observable<any> {
+    public updateUser(params: updateUserParams): Observable<AxiosResponse<any>>;
+    public updateUser(params: updateUserParams): Observable<any> {
 
-        if (username === null || username === undefined) {
-            throw new Error('Required parameter username was null or undefined when calling updateUser.');
+        if ( params.username === null ||  params.username === undefined) {
+            throw new Error('Required parameter  params.username was null or undefined when calling updateUser.');
         }
 
-        if (user === null || user === undefined) {
-            throw new Error('Required parameter user was null or undefined when calling updateUser.');
+        if ( params.user === null ||  params.user === undefined) {
+            throw new Error('Required parameter  params.user was null or undefined when calling updateUser.');
         }
 
         let headers = this.defaultHeaders;
@@ -375,8 +399,8 @@ export class UserService {
         if (httpContentTypeSelected != undefined) {
             headers['Content-Type'] = httpContentTypeSelected;
         }
-        return this.httpClient.put<any>(`${this.basePath}/user/${encodeURIComponent(String(username))}`,
-            user,
+        return this.httpClient.put<any>(`${this.basePath}/user/${encodeURIComponent(String(params.username))}`,
+            params.user,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers

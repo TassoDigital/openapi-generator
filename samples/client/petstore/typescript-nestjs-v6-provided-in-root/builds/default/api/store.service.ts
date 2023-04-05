@@ -11,18 +11,29 @@
  */
 /* tslint:disable:no-unused-variable member-ordering */
 
-import { HttpService, Inject, Injectable, Optional } from '@nestjs/common';
-import { AxiosResponse } from 'axios';
+import { Inject, Injectable, Optional } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
+import { AxiosResponse, AxiosRequestHeaders } from 'axios';
 import { Observable } from 'rxjs';
 import { Order } from '../model/order';
 import { Configuration } from '../configuration';
 
-
+type deleteOrderParams = {
+        orderId: string, 
+}
+type getInventoryParams = {
+}
+type getOrderByIdParams = {
+        orderId: number, 
+}
+type placeOrderParams = {
+        order: Order, 
+}
 @Injectable()
 export class StoreService {
 
     protected basePath = 'http://petstore.swagger.io/v2';
-    public defaultHeaders: Record<string,string> = {};
+    public defaultHeaders: Record<string, string> = {};
     public configuration = new Configuration();
 
     constructor(protected httpClient: HttpService, @Optional() configuration: Configuration) {
@@ -42,15 +53,15 @@ export class StoreService {
     /**
      * Delete purchase order by ID
      * For valid response try integer IDs with value &lt; 1000. Anything above 1000 or nonintegers will generate API errors
-     * @param orderId ID of the order that needs to be deleted
+     * @param deleteOrderParams
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteOrder(orderId: string, ): Observable<AxiosResponse<any>>;
-    public deleteOrder(orderId: string, ): Observable<any> {
+    public deleteOrder(params: deleteOrderParams): Observable<AxiosResponse<any>>;
+    public deleteOrder(params: deleteOrderParams): Observable<any> {
 
-        if (orderId === null || orderId === undefined) {
-            throw new Error('Required parameter orderId was null or undefined when calling deleteOrder.');
+        if ( params.orderId === null ||  params.orderId === undefined) {
+            throw new Error('Required parameter  params.orderId was null or undefined when calling deleteOrder.');
         }
 
         let headers = this.defaultHeaders;
@@ -66,7 +77,7 @@ export class StoreService {
         // to determine the Content-Type header
         const consumes: string[] = [
         ];
-        return this.httpClient.delete<any>(`${this.basePath}/store/order/${encodeURIComponent(String(orderId))}`,
+        return this.httpClient.delete<any>(`${this.basePath}/store/order/${encodeURIComponent(String(params.orderId))}`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers
@@ -76,11 +87,12 @@ export class StoreService {
     /**
      * Returns pet inventories by status
      * Returns a map of status codes to quantities
+     * @param getInventoryParams
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getInventory(): Observable<AxiosResponse<{ [key: string]: number; }>>;
-    public getInventory(): Observable<any> {
+    public getInventory(params: getInventoryParams): Observable<AxiosResponse<{ [key: string]: number; }>>;
+    public getInventory(params: getInventoryParams): Observable<any> {
 
         let headers = this.defaultHeaders;
 
@@ -111,15 +123,15 @@ export class StoreService {
     /**
      * Find purchase order by ID
      * For valid response try integer IDs with value &lt;&#x3D; 5 or &gt; 10. Other values will generated exceptions
-     * @param orderId ID of pet that needs to be fetched
+     * @param getOrderByIdParams
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getOrderById(orderId: number, ): Observable<AxiosResponse<Order>>;
-    public getOrderById(orderId: number, ): Observable<any> {
+    public getOrderById(params: getOrderByIdParams): Observable<AxiosResponse<Order>>;
+    public getOrderById(params: getOrderByIdParams): Observable<any> {
 
-        if (orderId === null || orderId === undefined) {
-            throw new Error('Required parameter orderId was null or undefined when calling getOrderById.');
+        if ( params.orderId === null ||  params.orderId === undefined) {
+            throw new Error('Required parameter  params.orderId was null or undefined when calling getOrderById.');
         }
 
         let headers = this.defaultHeaders;
@@ -137,7 +149,7 @@ export class StoreService {
         // to determine the Content-Type header
         const consumes: string[] = [
         ];
-        return this.httpClient.get<Order>(`${this.basePath}/store/order/${encodeURIComponent(String(orderId))}`,
+        return this.httpClient.get<Order>(`${this.basePath}/store/order/${encodeURIComponent(String(params.orderId))}`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers
@@ -147,15 +159,15 @@ export class StoreService {
     /**
      * Place an order for a pet
      * 
-     * @param order order placed for purchasing the pet
+     * @param placeOrderParams
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public placeOrder(order: Order, ): Observable<AxiosResponse<Order>>;
-    public placeOrder(order: Order, ): Observable<any> {
+    public placeOrder(params: placeOrderParams): Observable<AxiosResponse<Order>>;
+    public placeOrder(params: placeOrderParams): Observable<any> {
 
-        if (order === null || order === undefined) {
-            throw new Error('Required parameter order was null or undefined when calling placeOrder.');
+        if ( params.order === null ||  params.order === undefined) {
+            throw new Error('Required parameter  params.order was null or undefined when calling placeOrder.');
         }
 
         let headers = this.defaultHeaders;
@@ -179,7 +191,7 @@ export class StoreService {
             headers['Content-Type'] = httpContentTypeSelected;
         }
         return this.httpClient.post<Order>(`${this.basePath}/store/order`,
-            order,
+            params.order,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers
